@@ -1,0 +1,24 @@
++---------------------------------------------+
+|        A new website is available !!        |
++---------------------------------------------+
+
+Website Url: %URL%
+
+
+SFTP
+---------------------------------------------
+host:    %HOSTNAME%
+user:    default user
+pwd:     default password
+
+
+Database
+---------------------------------------------
+host:    https://db.%HOSTNAME%
+serveur: db.%URL%.docker
+user:    root
+pwd:     %DBPWD%
+
+Ui
+---------------------------------------------
+https://ui.%HOSTNAME%

@@ -1,0 +1,9 @@
+phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  container_name: phpmyadmin
+  restart: always
+  environment:
+    - VIRTUAL_HOST=db.${HOSTNAME}
+    - HTTPS_METHOD=nohttp
+    - PMA_ARBITRARY=1
+

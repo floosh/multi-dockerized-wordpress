@@ -1,0 +1,10 @@
+mails:
+  image: docker-postfix
+  container_name: postfix
+  restart: always
+  environment:
+    - maildomain=${HOSTNAME} 
+    - smtp_user=smtp:test
+  ports:
+    - "25:25"
+

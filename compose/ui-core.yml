@@ -1,0 +1,10 @@
+ui:
+  image: uifd/ui-for-docker
+  container_name: docker-ui
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  environment:
+    - VIRTUAL_HOST=ui.${HOSTNAME}
+    - HTTPS_METHOD=nohttp
+  privileged: true
+
