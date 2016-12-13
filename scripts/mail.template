@@ -15,7 +15,7 @@ pwd:     default password
 Database
 ---------------------------------------------
 host:    https://db.%HOSTNAME%
-serveur: db.%URL%.docker
+serveur: db.%URL%
 user:    root
 pwd:     %DBPWD%
 

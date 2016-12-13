@@ -17,9 +17,11 @@ HOSTNAME=`hostname`
 # Step 1: much mkdir
 mkdir -p  $DOCKER_DIR/$URL
 mkdir -p $WEB_DIR/$URL
+umask 002 $WEB_DIR/$URL
+chown www-data:www-data $WEB_DIR/$URL
 
 # Step 2: such templating
-sed -e "s/%URL%/$URL/g" -e "s/%DBPWD%/$DBPASS/" ../compose/wordpress-compose.yml > $DOCKER_DIR/$URL/docker-compose.yml
+sed -e "s/%URL%/$URL/g" -e "s/%DBPWD%/$DBPASS/" ../compose/wordpress.yml > $DOCKER_DIR/$URL/docker-compose.yml
 
 # Step 3: docker-compose, wow !
 docker-compose -f $DOCKER_DIR/$URL/docker-compose.yml up -d

@@ -1,18 +1,34 @@
-wp:
-  image: docker-wordpress
-  container_name: wp.%URL%
-  volumes:
-    - /var/docker/websites/%URL%:/var/www/html
-  environment:
-    - VIRTUAL_HOST=%URL%,*.%URL%
-    - WORDPRESS_DB_HOST=db
-    - WORDPRESS_DB_USER=root
-    - WORDPRESS_DB_PASSWORD=%DBPWD%
-  links:
-    - db
-db:
-  image: mariadb
-  container_name: db.%URL%
-  environment:
-    - MYSQL_ROOT_PASSWORD=%DBPWD%
+version: '2'
 
+services:
+  wp:
+    image: docker-wordpress
+    container_name: wp.%URL%
+    volumes:
+      - /var/docker/websites/%URL%:/var/www/html
+    environment:
+      - VIRTUAL_HOST=%URL%,*.%URL%
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=%DBPWD%
+    links:
+      - db
+    external_links:
+      - docker-postfix:mail
+    networks:
+      - default
+      - local_web
+  db:
+    image: mariadb
+    container_name: db.%URL%
+    environment:
+      - MYSQL_ROOT_PASSWORD=%DBPWD%
+    networks:
+      - default
+      - local_db
+
+networks:
+  local_db:
+    external: true
+  local_web:
+    external: true
