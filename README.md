@@ -19,8 +19,7 @@ Let's encrypt powered SSL script !
 * Ui view incomin'
 
 ## Network topology
-Graphml incomin'
-
+![alt tag](https://raw.githubusercontent.com/floosh/multi-dockerized-wordpress/master/network.png)
 
 ## Deployement
 
