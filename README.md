@@ -38,3 +38,12 @@ You need to configure sftp in a way that files uploaded got rw permissions for w
 # Setting UMASK for all ssh based connections (ssh, sftp, scp)
 session    optional     pam_umask.so umask=002
 ```
+
+### Misc
+Custom proxy configuration for phpmyadmin (timeout during importation of big SQL files)
+Put theses lines in the custom vhosts directory (/var/docker/vhosts)
+```
+client_max_body_size 100M;
+proxy_send_timeout          600;
+proxy_read_timeout          600;
+```
