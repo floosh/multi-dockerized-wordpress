@@ -2,33 +2,21 @@ version: '2'
 
 services:
   wp:
-    image: docker-wordpress
+    image: php:mysqli
     container_name: wp.%URL%
     volumes:
-      - /var/docker/websites/%URL%:/var/www/html
+      - %WEBDIR%/%URL%:/var/www/html
+      - /var/run/mysqld/mysqld.sock:/tmp/mysqld.sock
     environment:
       - VIRTUAL_HOST=%URL%,*.%URL%
-      - WORDPRESS_DB_HOST=db
-      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_HOST=localhost:/tmp/mysqld.sock
+      - WORDPRESS_DB_USER=%DBNAME%
+      - WORDPRESS_DB_NAME=%DBNAME%
       - WORDPRESS_DB_PASSWORD=%DBPWD%
-    links:
-      - db
-    external_links:
-      - docker-postfix:mail
     networks:
       - default
       - local_web
-  db:
-    image: mariadb
-    container_name: db.%URL%
-    environment:
-      - MYSQL_ROOT_PASSWORD=%DBPWD%
-    networks:
-      - default
-      - local_db
 
 networks:
-  local_db:
-    external: true
   local_web:
     external: true

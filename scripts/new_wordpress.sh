@@ -1,36 +1,32 @@
 #!/bin/bash
 # This must be called with two parameters, as follows:
 
-if [ $# -eq 0 ]
-then
-    echo "Usage: URL [MAIL]"
-    exit 1
-fi
+read -e -p "Website URL ? " URL
+read -e -p "Database name ? " -i "${URL//./}" DBNAME
 
 # Proper number of arguments are there, carry on.
-URL=$1
-DOCKER_DIR=/var/docker/compose
-WEB_DIR=/var/docker/websites
-DBPASS=`tr -dc A-Za-z0-9_ < /dev/urandom | head -c 20 | xargs`
-HOSTNAME=`hostname`
+
+DOCKERDIR=/docker/compose
+WEBDIR=/docker/websites
+DBPWD=`./mysql.sh ${DBNAME}`
 
 # Step 1: much mkdir
-mkdir -p  $DOCKER_DIR/$URL
-mkdir -p $WEB_DIR/$URL
-umask 002 $WEB_DIR/$URL
-chown www-data:www-data $WEB_DIR/$URL
+mkdir -p  $DOCKERDIR/$URL
+mkdir -p $WEBDIR/$URL
+chown www-data:www-data $WEBDIR/$URL
+chmod 775 $WEBDIR/$URL
 
 # Step 2: such templating
-sed -e "s/%URL%/$URL/g" -e "s/%DBPWD%/$DBPASS/" ../compose/wordpress.yml > $DOCKER_DIR/$URL/docker-compose.yml
+sed -e "s@%WEBDIR%@$WEBDIR@g" -e "s/%URL%/$URL/g" -e "s/%DBPWD%/$DBPWD/g" -e "s/%DBNAME%/$DBNAME/g" -e "s/%HOSTNAME%/$HOSTNAME/g" ../compose/wordpress.yml > $DOCKERDIR/$URL/docker-compose.yml
 
 # Step 3: docker-compose, wow !
-docker-compose -f $DOCKER_DIR/$URL/docker-compose.yml up -d
+docker-compose -f $DOCKERDIR/$URL/docker-compose.yml up -d
 
 # Step 4: send mail, amazing
-OUT=$(sed -e "s/%URL%/$URL/g" -e "s/%DBPWD%/$DBPASS/" -e "s/%HOSTNAME%/$HOSTNAME/" mail.template)
+OUT=$(sed -e "s/%URL%/$URL/g" -e "s/%DBPWD%/$DBPWD/g" -e "s/%DBNAME%/$DBNAME/g" -e "s/%HOSTNAME%/$HOSTNAME/g" mail.template)
 
 if [ -z '$2' ]; then
-echo "$OUT" | mail -s "A new website is aviable !" "$2"
+echo "$OUT" | mail -s "A new website is aviable !" "$MAIL_CONTACT"
 fi
 
 echo "$OUT"

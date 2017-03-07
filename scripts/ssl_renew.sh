@@ -1,7 +1,7 @@
 #!/bin/bash
 
 P1=/etc/letsencrypt/live
-P2=/var/docker/certs
+P2=/docker/certs
 
 docker stop nginx-proxy;
 

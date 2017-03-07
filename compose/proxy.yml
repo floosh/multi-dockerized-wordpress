@@ -8,14 +8,12 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /var/docker/vhosts:/etc/nginx/vhost.d:ro
-      - /var/docker/auth:/etc/nginx/htpasswd
-      - /var/docker/certs:/etc/nginx/certs
     ports:
-      - "80:80"
-      - "443:443"  
+      - "8090:80"
     networks:
       - local_web
 
 networks:
   local_web:
     external: true
+
