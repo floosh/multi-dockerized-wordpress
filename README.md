@@ -8,39 +8,55 @@ It's a set of scripts and docker-compose files for building a secured multi-word
 ```
 
 ## Secure
-Each wordpress got its own mariadb instance, with randomly-generated password.
+Each wordpress got its own mariadb database, with randomly-generated password.
 If one website is taked-down and the db is compromized, other wordpress instances remains safe.
 
-Let's encrypt powered SSL script !
+Let's encrypt powered SSL script ! (wip)
 
 ## Simple
+What can I do with that ?
 * One sftp account for the whole server (all wordpress instances)
 * One phpmyadmin url for the whole server (all db instances)
-* Ui view incomin'
+* Ui view with linux-dash
+* Automatize creation of ssl certs (wip)
+* A lot of other things !
 
-## Network topology
-![alt tag](https://raw.githubusercontent.com/floosh/multi-dockerized-wordpress/master/network.png)
+## Deployement [WIP]
+This repo provide only docker scripts for create wp instances.
 
-## Deployement
+### Prerequistes
+You need mariadb installed on the host.
+
+### Web servers
+(example of configuration with nginx & apache) 
+
+Nginx =(reverse-proxy)=> (apache & nginx-proxy-container)
+apache + php => phpmyadmin & linux-dash
+nginx-proxy-container => all wp sites
 
 ### Core containers
-Like postfix, nginx, phpmyadmin...
+Launch the nginx-proxy and create docker network:
 ```
 ./scripts/core_start.sh
+```
+Create environment variables:
+```
+export MARIA_PWD mymariadbpassword
+export MAIL_CONTACT iwillreceivesitecredentials@example.com
+```
+
+### Create wp instance
+```
+./new_wordpress.sh
 ```
 
 ### Manage sftp permissions
 You need to configure sftp in a way that files uploaded got rw permissions for www-data group. What I've done:
 * Created user for sftp only and with www-data as primary group
-* Setted default umask for this user through sftp. At the end of /etc/pam.d/sshd add:
-```
-# Setting UMASK for all ssh based connections (ssh, sftp, scp)
-session    optional     pam_umask.so umask=002
-```
 
 ### Misc
 Custom proxy configuration for phpmyadmin (timeout during importation of big SQL files)
-Put theses lines in the custom vhosts directory (/var/docker/vhosts)
+For nginx:
 ```
 client_max_body_size 100M;
 proxy_send_timeout          600;
